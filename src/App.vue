@@ -1,9 +1,13 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zml
+ * @Date: 2020-05-29 12:13:08
+ * @LastEditors: zml
+ * @LastEditTime: 2020-05-29 14:20:51
+-->
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view />
   </div>
 </template>
