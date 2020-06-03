@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-06-03 10:22:29
 --> 
 # table
-关于ElementUI  Vue的一个深色表格1
+基于Vue+elementUI深色主题表格组件
 ## 安装依赖
 
 ```
