@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-20 11:16:03
 --> 
 # table
-关于ElementUI  Vue的一个深色表格
+关于ElementUI  Vue的一个深色表格1
 ## Project setup
 ```
 npm install
