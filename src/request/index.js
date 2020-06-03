@@ -4,7 +4,7 @@
  * @Author: zml
  * @Date: 2020-05-29 14:30:56
  * @LastEditors: zml
- * @LastEditTime: 2020-05-29 15:49:46
+ * @LastEditTime: 2020-06-03 11:18:41
  */
 import Vue from "vue";
 import axios from "axios";
@@ -114,8 +114,6 @@ http.interceptors.response.use(
  * @param {*} actionName action方法名称
  */
 http.adornUrl = actionName => {
-  console.log(process.env, "process");
-  console.log(process, "process");
   // 非生产环境 && 开启代理, 接口前缀统一使用[/proxyApi/]前缀做代理拦截!
   return process.env.VUE_APP_BASE_API + actionName;
   // return (

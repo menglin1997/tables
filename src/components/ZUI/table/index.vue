@@ -4,7 +4,7 @@
  * @Author: zml
  * @Date: 2020-05-15 14:27:56
  * @LastEditors: zml
- * @LastEditTime: 2020-06-03 09:54:17
+ * @LastEditTime: 2020-06-03 12:07:23
 -->
 <template>
   <div>
@@ -20,6 +20,7 @@
           <th v-if="menu.isShow">{{ menu.text }}</th>
         </tr>
       </thead>
+
       <!-- 表格内容 -->
       <tbody>
         <tr class="tr" v-for="(item, index) in tableContent" :key="index">
@@ -29,7 +30,15 @@
           </td>
           <!-- 处理表格内容逻辑 -->
           <td v-for="(k, i) in contentKey" :key="i">
-            <span v-if="k.type === 'string'"> {{ item[k.key] }} </span>
+            <el-button
+              :type="k.btnType"
+              v-if="k.type == 'btn'"
+              @click="handleOpt(k.btnMethods, item, k.methodParams)"
+              >{{ k.btnTxt }}</el-button
+            >
+            <span v-else-if="k.type === 'string'" :title="item[k.key]">
+              {{ item[k.key] }}
+            </span>
             <span v-else-if="k.type === 'moment'">
               {{ item[k.key] | dateFormate3 }}
             </span>
@@ -41,17 +50,19 @@
               </div>
             </div>
             <span v-else-if="k.type === 'object1'">
-              {{ item[k.key][k.key2] }}
+              {{ item[k.key][k.key2] || "--" }}
             </span>
             <span v-else-if="k.type === 'object2'">
-              {{ item[k.key][k.key2][k.key3] }}
+              {{ item[k.key][k.key2][k.key3] || "--" }}
             </span>
-            <span v-else-if="k.type === 'array'"> {{ item[k.key] }} </span>
+            <span v-else-if="k.type === 'array'">
+              {{ item[k.key] || "--" }}
+            </span>
             <span v-else> {{ item[k.key] }} </span>
+            <!-- <el-button :type="k.btnType" v-if="k.btnType">{{ k.btnName }}</el-button> -->
+            <!-- <span v-else>{{ k }}</span> -->
           </td>
           <td v-if="menu.isShow">
-            <!-- zzcyi判断权限专用 -->
-            <!-- v-if="isAuth(item1.isAuth)" -->
             <el-button
               :type="item1.type"
               v-for="(item1, index) in btnOpt"
@@ -65,45 +76,29 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- 没有数据情况 -->
     <div class="trNone" v-if="tableContent.length === 0">暂无数据</div>
   </div>
 </template>
 <script>
 import moment from "moment";
 export default {
+  filters: {
+    // 传入秒数
+    dateFormate3: function(dataStr, pattern = "YYYY-MM-DD") {
+      let t = dataStr * 1000;
+      // console.log(fromNow(t))
+      return moment(t).format(pattern);
+    }
+  },
   props: {
     /**
-     * 表格中的内容
+     * 表格中的内容key
      * key 要显示在界面中的项目 必填
-     * type接口返回的类型 必填  type值为moment标示需要转换为时间格式
+     * type接口返回的类型 必填
      * key2 type为object1时必填
      * key3 type为object2
-     * 示例:
-     *   contentKey: [
-        {
-          key: "name",
-          type: "string"
-        },
-        {
-          key: 'machineCode',
-          type: 'moment'
-        },
-        {
-          key: 'organInfoVo',
-          type: 'object1',
-          key2: 'organName'
-        },
-        {
-          key: 'machineCode',
-          type: 'array'
-        },
-        {
-          key: 'organInfoVo',
-          type: 'object2',
-          key2: 'organName',
-          key3: 'userInfoVo'
-        }
-      ]
      *
      */
     contentKey: {
@@ -113,9 +108,8 @@ export default {
       }
     },
     /**
-     * 表头文字内容
+     * 表头内容
      * Array
-     * 例子: tableHead: ['设备名称', '设备编号', '类型名称', '设备地址'],
      *
      */
     tableHead: {
@@ -141,7 +135,7 @@ export default {
     },
     /**
      * 是否显示操作栏
-     * isShow {Bollean} 默认false不显示操作栏
+     * isShow {Bollean} 默认false不显示排序
      * text {string} 表头文字
      *
      */
@@ -177,19 +171,22 @@ export default {
       tableList: []
     };
   },
-  filters: {
-    // 传入秒数
-    dateFormate3: function(dataStr, pattern = "YYYY-MM-DD") {
-      let t = dataStr * 1000;
-      return moment(t).format(pattern);
-    }
-  },
   methods: {
-    // 点击操作栏事件
+    /* 
+    methods:父组件的方法
+    val： 当前一行的数据
+    params： 传过去的参数
+    */
+    // 点击操作栏
     handleOpt(methods, val, params) {
-      console.log(methods, val, params, "methods, val, params");
       if (methods) {
         this.$emit(methods, val, params);
+      }
+    },
+    // 点击操作栏按钮
+    handleBtn(val, methods) {
+      if (methods) {
+        this.$emit(methods, val);
       }
     }
   }
@@ -206,6 +203,9 @@ table {
   thead tr {
     background: #142143;
     height: 60px;
+    th {
+      text-align: center;
+    }
   }
   tbody {
     background: #0f1c3e;
@@ -228,6 +228,14 @@ table {
   text-align: center;
   line-height: 80px;
   color: #999;
+}
+td,
+th {
+  min-width: 3vw;
+  max-width: 10vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 // tbody tr:hover {
 //   background-color: rgba(0,0,0,.1);;

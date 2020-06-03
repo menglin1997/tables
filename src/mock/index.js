@@ -4,10 +4,9 @@
  * @Author: zml
  * @Date: 2020-05-29 12:20:11
  * @LastEditors: zml
- * @LastEditTime: 2020-05-29 16:35:58
+ * @LastEditTime: 2020-06-03 11:19:26
  */
 // 使用 Mock
-import { param2Obj } from "@/utils";
 import Mock from "mockjs";
 // 模拟数据列表
 var arr = [];
@@ -25,10 +24,6 @@ for (let i = 0; i < 100; i++) {
 // }
 // 数据的删除操作
 let list = function(options) {
-  console.log(options, "params:");
-  let url = param2Obj(options.url);
-  console.log(url, "url");
-  console.log(options, "打印的options");
   let rtype = options.type.toLowerCase(); //获取请求的类型并转换为小写
   switch (rtype) {
     case "get":

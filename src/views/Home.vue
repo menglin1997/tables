@@ -4,12 +4,10 @@
  * @Author: zml
  * @Date: 2020-05-29 12:13:08
  * @LastEditors: zml
- * @LastEditTime: 2020-06-03 09:56:18
+ * @LastEditTime: 2020-06-03 12:09:05
 -->
 <template>
   <div class="home">
-    <!-- 暂无数据 -->
-    <!-- <tables :tableHead="tableHead1"></tables> -->
     <tables
       :contentKey="contentKey"
       :menu="menu"
@@ -17,6 +15,7 @@
       :tableContent="tableContent"
       :tableHead="tableHead"
       @handleChange="handleChange"
+      @checkDetail="checkDetail"
     ></tables>
   </div>
 </template>
@@ -31,6 +30,15 @@ export default {
   },
   data() {
     return {
+      tableHead: [
+        "登录账号",
+        "激活时间",
+        "老师",
+        "登陆账号",
+        "管理员",
+        "状态",
+        "详情"
+      ],
       // 表格中的内容key
       /**
        * 表格中的内容key
@@ -42,51 +50,53 @@ export default {
        */
       contentKey: [
         {
-          key: "name",
+          key: "loginName",
           type: "string"
         },
         {
-          key: "age",
-          type: "string"
+          key: "expireTime",
+          type: "moment"
+        },
+        {
+          key: "teacher",
+          type: "array"
+        },
+        {
+          key: "organInfoVo",
+          type: "object1",
+          key2: "sysName"
+        },
+        {
+          key: "organInfoVo",
+          type: "object2",
+          key2: "userInfoVo",
+          key3: "realName"
         },
         {
           key: "status",
-          type: "string"
+          type: "tag",
+          tagItem: [
+            {
+              type: "success",
+              value: 1,
+              text: "启用"
+            },
+            {
+              type: "danger",
+              value: 2,
+              text: "禁用"
+            }
+          ]
         },
         {
-          key: "creatTime",
-          type: "string"
+          key: "",
+          type: "btn",
+          btnTxt: "详情",
+          btnMethods: "checkDetail",
+          methodParams: "我是详情",
+          btnType: "text"
         }
-        // {
-        //   key: 'machineCode',
-        //   type: 'string'
-        // },
-        // {
-        //   key: 'machineCode',
-        //   type: 'string'
-        // },
-        // {
-        //   key: 'machineCode',
-        //   type: 'string'
-        // },
-        // {
-        //   key: 'organInfoVo',
-        //   type: 'object1',
-        //   key2: 'organName'
-        // },
-        // {
-        //   key: 'machineCode',
-        //   type: 'array'
-        // },
-        // {
-        //   key: 'organInfoVo',
-        //   type: 'object2',
-        //   key2: 'organName',
-        //   key3: 'userInfoVo'
-        // }
       ],
-      tableHead1: ["设备名称", "设备编号", "类型名称", "设备地址"],
-      tableHead: ["姓名", "年龄", "状态", "创建时间"],
       menu: {
         isShow: true,
         text: "可以变"
@@ -106,7 +116,6 @@ export default {
           name: "编辑",
           methods: "handleChange",
           type: "primary",
-          isAuth: "pc:device:edit",
           methodParams: {
             ref: "addOrUpdate",
             type: 1
@@ -115,7 +124,6 @@ export default {
         {
           name: "重启设备",
           methods: "handleReset",
-          isAuth: "pc:device:restartDevice",
           type: "success",
           methodParams: {}
         },
@@ -123,23 +131,56 @@ export default {
           name: null,
           icon: "el-icon-delete",
           type: "danger",
-          isAuth: "pc:device:delete",
           methods: "handleDel"
         }
       ]
     };
   },
   async created() {
-    // getProvincesList().then(res => {
-    //   console.log(res, "res");
-    // });
-    const { data } = await this.$http.get("/list");
-    console.log(data, "data");
-    this.tableContent = data.data.slice(1, 10);
+    // const { data } = await this.$http.get("/list");
+    // this.tableContent = data.data.slice(1, 10);
+    this.tableContent = [
+      {
+        id: "22",
+        status: 1,
+        loginName: "2e",
+        expireTime: "1590076800",
+        teacher: ["美子老师", "包包老师", "木子老师"],
+        organInfoVo: {
+          sysName: "测试人员",
+          userInfoVo: {
+            realName: "代理商001"
+          }
+        }
+      },
+      {
+        id: "2",
+        status: 2,
+        loginName: "2",
+        activateTime: "2",
+        organId: "1253231593917485058",
+        expireTime: "1590076800",
+        // teacher: ["美子老师", "包包老师", "木子老师"],
+        teacher: null,
+        organInfoVo: {
+          sysName: "测试人员",
+          userInfoVo: {
+            realName: "代理商001"
+          }
+        }
+      }
+    ];
   },
   methods: {
-    handleChange(item, b) {
-      console.log(item, b);
+    // 编辑
+    handleChange(item, params) {
+      console.log(item, params, "我是组件传过来的哦12");
+      this.$message.success("点击了操作栏按钮");
+    },
+    // 详情
+    checkDetail(item, params) {
+      console.log(item, params, "我是组件传过来的哦1");
+      this.$message.success("点击了详情");
     }
   }
 };
