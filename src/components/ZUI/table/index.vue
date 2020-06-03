@@ -4,7 +4,7 @@
  * @Author: zml
  * @Date: 2020-05-15 14:27:56
  * @LastEditors: zml
- * @LastEditTime: 2020-05-29 16:42:16
+ * @LastEditTime: 2020-06-03 09:54:17
 -->
 <template>
   <div>
@@ -107,7 +107,10 @@ export default {
      *
      */
     contentKey: {
-      type: Array
+      type: Array,
+      default: function() {
+        return [];
+      }
     },
     /**
      * 表头文字内容
@@ -118,7 +121,7 @@ export default {
     tableHead: {
       type: Array,
       default: function() {
-        return ["表头1", "表头2"];
+        return [];
       }
     },
     /**
